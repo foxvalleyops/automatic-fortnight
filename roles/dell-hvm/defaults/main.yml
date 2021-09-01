@@ -1,0 +1,8 @@
+---
+# List vendor-ID:device-ID sets to pass through
+# Find these using `lspci -nn`
+# 
+# Below are example IDs for an Intel Corporation NVMe DC SSD
+vfio_pci_ids:
+  - 8086:0a55
+

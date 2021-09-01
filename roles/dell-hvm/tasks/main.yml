@@ -1,0 +1,103 @@
+---
+- name: Install required applications
+  apt:
+    name: 
+      - qemu-kvm 
+      - qemu-utils 
+      - libvirt-daemon-system  
+      - libvirt-clients 
+      - bridge-utils 
+      - virt-manager
+      - ovmf 
+      - numad
+      - ksmtuned
+
+- name: disable merge_across_nodes for ksm
+  command: echo '0' > /sys/kernel/mm/ksm/merge_across_nodes
+  notify:
+    - reboot
+
+- name: enable run for ksm
+  command: echo '1' > /sys/kernel/mm/ksm/run
+  notify:
+    - reboot    
+  
+
+- name: Check successful CPU detection
+  debug:
+    msg: CPU detected as {{ cpu_vendor }}
+  failed_when:
+    - cpu_vendor != 'amd'
+    - cpu_vendor != 'intel'
+
+- name: Check GRUB defaults and enable IOMMU if necessary
+  replace:
+    path: /etc/default/grub
+    regexp: '^(GRUB_CMDLINE_LINUX=(?:(?![" ]{{ option | regex_escape }}=).)*)(?:[" ]{{ option | regex_escape }}=\S+)?(.*")$'
+    replace: '\1 {{ option }}={{ value }}\2'
+  vars:
+    option: '{{ iommu_kernel_option }}'
+    value: '{{ iommu_kernel_value }}'
+  notify:
+    - reboot
+    - generate grub config
+
+- name: Check GRUB defaults and enable IOMMU_PT if necessary
+  replace:
+    path: /etc/default/grub
+    regexp: '^(GRUB_CMDLINE_LINUX=(?:(?![" ]{{ option | regex_escape }}=).)*)(?:[" ]{{ option | regex_escape }}=\S+)?(.*")$'
+    replace: '\1 {{ option }}={{ value }}\2'
+  vars:
+    option: '{{ iommu_pt_kernel_option }}'
+    value: '{{ iommu_pt_kernel_value }}'
+  notify:
+    - reboot
+    - generate grub config
+
+- name: Check GRUB defaults and enable vfio-pci if necessary
+  replace:
+    path: /etc/default/grub
+    regexp: '^(GRUB_CMDLINE_LINUX=(?:(?![" ]{{ option | regex_escape }}=).)*)(?:[" ]{{ option | regex_escape }}=\S+)?(.*")$'
+    replace: '\1 {{ option }}={{ value }}\2'
+  vars:
+    option: '{{ vfio_pci_kernel_option }}'
+    value: '{{ vfio_pci_kernel_value }}'
+  notify:
+    - reboot
+    - generate grub config
+
+- name: Check default hugepagesz defaults and enable hugepagesz if necessary
+  replace:
+    path: /etc/default/grub
+    regexp: '^(GRUB_CMDLINE_LINUX=(?:(?![" ]{{ option | regex_escape }}=).)*)(?:[" ]{{ option | regex_escape }}=\S+)?(.*")$'
+    replace: '\1 {{ option }}={{ value }}\2'
+  vars:
+    option: 'default_hugepagesz'
+    value: '1G'
+  notify:
+    - reboot
+    - generate grub config
+
+- name: Check hugepagesz defaults and enable hugepagesz if necessary
+  replace:
+    path: /etc/default/grub
+    regexp: '^(GRUB_CMDLINE_LINUX=(?:(?![" ]{{ option | regex_escape }}=).)*)(?:[" ]{{ option | regex_escape }}=\S+)?(.*")$'
+    replace: '\1 {{ option }}={{ value }}\2'
+  vars:
+    option: 'hugepagesz'
+    value: '1G'
+  notify:
+    - reboot
+    - generate grub config
+
+- name: Check hugepages defaults and enable hugepages if necessary
+  replace:
+    path: /etc/default/grub
+    regexp: '^(GRUB_CMDLINE_LINUX=(?:(?![" ]{{ option | regex_escape }}=).)*)(?:[" ]{{ option | regex_escape }}=\S+)?(.*")$'
+    replace: '\1 {{ option }}={{ value }}\2'
+  vars:
+    option: 'hugepages'
+    value: '200'
+  notify:
+    - reboot
+    - generate grub config

@@ -1,0 +1,7 @@
+---
+- name: generate grub config
+  command: update-grub
+
+- name: reboot
+  reboot:
+

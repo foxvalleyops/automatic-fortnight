@@ -1,0 +1,6 @@
+---
+- hosts: dellhvm
+  roles:
+    - role: 'sys-tweaks'
+    - role: 'dell-hvm'
+  become: true
