@@ -11,6 +11,8 @@
       - ovmf 
       - numad
       - ksmtuned
+      - openvswitch-common 
+      - openvswitch-switch
 
 - name: disable merge_across_nodes for ksm
   command: echo '0' > /sys/kernel/mm/ksm/merge_across_nodes
@@ -101,3 +103,7 @@
   notify:
     - reboot
     - generate grub config
+
+- openvswitch.openvswitch.openvswitch_bridge:
+    bridge: ovsbr
+    state: present

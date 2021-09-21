@@ -1,0 +1,5 @@
+
+- name: Download talos iso
+  get_url:
+    url: https://github.com/talos-systems/talos/releases/download/v{{talos_version}}/talos-{{talos_architecture}}.iso
+    dest: /var/lib/libvirt/images/talos-{{talos_version}}-{{talos_architecture}}.iso

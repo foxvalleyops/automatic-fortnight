@@ -2,5 +2,9 @@
 - hosts: dellhvm
   roles:
     - role: 'sys-tweaks'
+      tags: [hvm, all]
     - role: 'dell-hvm'
+      tags: [hvm, all]
+    - role: 'talos'
+      tags: [ talos, all ]
   become: true
