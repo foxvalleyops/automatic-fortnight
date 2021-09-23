@@ -5,6 +5,8 @@
       tags: [hvm, all]
     - role: 'dell-hvm'
       tags: [hvm, all]
+    - role: 'cluster-networking'
+      tags: [networking, all]
     - role: 'talos'
       tags: [ talos, all ]
   become: true

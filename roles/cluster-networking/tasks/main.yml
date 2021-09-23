@@ -1,0 +1,4 @@
+- openvswitch.openvswitch.openvswitch_bridge:
+    bridge: ovsbr
+    vlan: 5
+    state: present
